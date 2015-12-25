@@ -39,7 +39,7 @@ Vagrant.configure(2) do |config|
     d.run "jjperezaguinaga/letsencrypt",
       args: "-p 443:443",
       restart: "no",
-      cmd: "--email #{EMAIL} --agree-tos -d #{DOMAIN} certonly"
+      cmd: "--email #{$EMAIL} --agree-tos -d #{$DOMAIN} certonly"
   end
 
 end

@@ -11,3 +11,6 @@ ssh:
 
 halt:
 	$(ENTRYPOINT) halt
+
+status:
+	$(ENTRYPOINT) status
