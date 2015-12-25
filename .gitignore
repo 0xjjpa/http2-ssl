@@ -1,3 +1,4 @@
 .vagrant
-create_vagrant.sh
+vagrant.sh
 hosts.ini
+*.swp

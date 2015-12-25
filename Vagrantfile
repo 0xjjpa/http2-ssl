@@ -12,6 +12,10 @@ Vagrant.configure(2) do |config|
   config.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
   config.vm.box = "dummy" 
 
+  config.vm.synced_folder ".", "/opt/rancher", type: "rsync",
+      rsync__exclude: ".git/", rsync__args: ["--verbose", "--archive", "--delete", "--copy-links"],
+      disabled: $rsync_folder_disabled
+
   config.vm.provider :aws do |aws, override|
     aws.access_key_id = $AWS_ACCESS_KEY
     aws.secret_access_key = $AWS_SECRET_KEY
@@ -25,7 +29,12 @@ Vagrant.configure(2) do |config|
     override.ssh.private_key_path = $AWS_KEYPAIR_PATH
   end
 
-  config.vm.synced_folder ".", "/opt/rancher", type: "rsync",
-      rsync__exclude: ".git/", rsync__args: ["--verbose", "--archive", "--delete", "--copy-links"],
-      disabled: $rsync_folder_disabled
+  config.vm.provision :docker do |d|
+    d.pull_images "gliderlabs/alpine:3.1"
+    d.build_image "/opt/rancher/", 
+      args: "-t jjperezaguinaga/hello-world"
+    d.run "jjperezaguinaga/hello-world",
+      args: "-p 5000:5000 -v /opt/coreos/html:/app"
+  end
+
 end
