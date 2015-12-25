@@ -30,11 +30,13 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provision :docker do |d|
-    d.pull_images "gliderlabs/alpine:3.1"
-    d.build_image "/opt/rancher/", 
-      args: "-t jjperezaguinaga/hello-world"
-    d.run "jjperezaguinaga/hello-world",
-      args: "-p 5000:5000 -v /opt/coreos/html:/app"
+    d.pull_images "ubuntu:trusty"
+    d.build_image "/opt/rancher/letsencrypt", 
+      args: "-t jjperezaguinaga/letsencrypt"
+    d.run "jjperezaguinaga/letsencrypt",
+      args: "-p 443:443 -v /opt/https2/ssl:/etc/letsencrypt/live/https2.navis.xyz",
+      restart: "no",
+      cmd: "--register-unsafely-without-email --agree-tos -d https2.navis.xyz certonly"
   end
 
 end
