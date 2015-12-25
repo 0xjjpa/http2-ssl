@@ -34,7 +34,7 @@ Vagrant.configure(2) do |config|
     d.build_image "/opt/rancher/letsencrypt", 
       args: "-t jjperezaguinaga/letsencrypt"
     d.run "jjperezaguinaga/letsencrypt",
-      args: "-p 443:443 -v /opt/https2/ssl:/etc/letsencrypt/live/https2.navis.xyz",
+      args: "-p 443:443",
       restart: "no",
       cmd: "--register-unsafely-without-email --agree-tos -d https2.navis.xyz certonly"
   end
