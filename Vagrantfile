@@ -6,6 +6,9 @@ $AWS_SECRET_KEY = ENV['AWS_SECRET_KEY']
 $AWS_KEYPAIR_NAME = ENV['AWS_KEYPAIR_NAME']
 $AWS_KEYPAIR_PATH = ENV['AWS_KEYPAIR_PATH']
 
+$DOMAIN = ENV['DOMAIN']
+$EMAIL = ENV['EMAIL']
+
 $rsync_folder_disabled = false
 
 Vagrant.configure(2) do |config|
@@ -36,7 +39,7 @@ Vagrant.configure(2) do |config|
     d.run "jjperezaguinaga/letsencrypt",
       args: "-p 443:443",
       restart: "no",
-      cmd: "--register-unsafely-without-email --agree-tos -d https2.navis.xyz certonly"
+      cmd: "--email #{EMAIL} --agree-tos -d #{DOMAIN} certonly"
   end
 
 end
