@@ -1,0 +1,66 @@
+server {
+  listen 80;
+  server_name ::DOMAIN::;
+  return 301 https://$host$request_uri;
+}
+
+snrver {
+  listen          443 ssl http2;
+  server_name     ::DOMAIN::;
+
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location / {
+    try_files $uri $uri/ @static;
+  }
+
+  location @static {
+    try_files '' /index.html last;
+  }
+
+  ssl_certificate /etc/letsencrypt/live/::DOMAIN::/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/::DOMAIN::/privkey.pem;
+
+  ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 +SHA !aNULL !eNULL !LOW !MD5 !EXP !DSS !PSK !SRP !kECDH !CAMELLIA !RC4 !SEED';
+
+  ssl_session_cache   shared:SSL:10m;
+  ssl_session_timeout 10m;
+  keepalive_timeout   70;
+
+  ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
+  ssl_prefer_server_ciphers on;
+
+  # Security headers
+  add_header "Strict-Transport-Security" "max-age=16070400; includeSubDomains";
+  add_header "X-Frame-Options" "SAMEORIGIN";
+  add_header "X-Content-Type-Options" "nosniff";
+  add_header "X-XSS-Protection" "1; mode=block";
+  add_header "Pragma" "no-cache";
+  add_header "Cache-Control" "no-store,no-cache";
+  add_header "X-Permitted-Cross-Domain-Policies" "master-only";
+  add_header "Content-Security-Policy" "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://ajax.googleapis.com https://cdnjs.cloudflare.com; img-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' data:; frame-src 'self'; object-src 'none'; connect-src 'self'; media-src 'self'";
+
+  gzip  on;
+  gzip_http_version 1.1;
+  gzip_vary on;
+  gzip_comp_level 5;
+  gzip_proxied any;
+  gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+  # make sure gzip does not lose large gzipped js or css files
+  gzip_buffers 16 8k;
+
+  # Disable gzip for certain browsers.
+  gzip_disable "MSIE [1-6].(?!.*SV1)";
+
+  # Don't log assets requests
+  location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|zip|tgz|gz|rar|bz2|txt|tar|wav|bmp|rtf|js|flv|swf|xml|mp4|svg|woff|eot|svg|ttf|ogv)$ {
+    expires 7d;
+    access_log off;
+  }
+
+  # Supported browsers
+  modern_browser unlisted;
+
+}
