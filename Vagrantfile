@@ -42,4 +42,7 @@ Vagrant.configure(2) do |config|
       cmd: "--email #{$EMAIL} --agree-tos -d #{$DOMAIN} certonly"
   end
 
+  config.vm.provision :shell,
+    inline: "sed -e \"s/::DOMAIN::/#{DOMAIN}/g\" /opt/rancher/html/nginx.conf.tmpl > /opt/rancher/html/nginx.conf"
+
 end
