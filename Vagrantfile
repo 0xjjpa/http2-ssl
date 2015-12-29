@@ -32,7 +32,7 @@ Vagrant.configure(2) do |config|
     override.ssh.private_key_path = $AWS_KEYPAIR_PATH
   end
 
-  config.vm.provision :docker do |d|
+  config.vm.provision "letsencrypt", type: "docker" do |d|
     d.pull_images "ubuntu:trusty"
     d.build_image "/opt/rancher/letsencrypt", 
       args: "-t jjperezaguinaga/letsencrypt"
@@ -42,10 +42,10 @@ Vagrant.configure(2) do |config|
       cmd: "--email #{$EMAIL} --agree-tos -d #{$DOMAIN} certonly"
   end
 
-  config.vm.provision :shell,
+  config.vm.provision "replace", type: "shell",
     inline: "sed -e \"s/::DOMAIN::/#{$DOMAIN}/g\" /opt/rancher/html/default.conf.tmpl > /opt/rancher/html/default.conf"
 
-  config.vm.provision :docker do |d|
+  config.vm.provision "webpage", type: "docker" do |d|
     d.pull_images "alpine:3.2"
     d.build_image "/opt/rancher/html",
       args: "-t jjperezaguinaga/html"
