@@ -46,7 +46,7 @@ Vagrant.configure(2) do |config|
     inline: "sed -e \"s/::DOMAIN::/#{$DOMAIN}/g\" /opt/rancher/html/default.conf.tmpl > /opt/rancher/html/default.conf"
 
   config.vm.provision :docker do |d|
-    d.pull_images "gliderlabs/alpine:3.2"
+    d.pull_images "alpine:3.2"
     d.build_image "/opt/rancher/html",
       args: "-t jjperezaguinaga/html"
     d.run "jjperezaguinaga/html",
