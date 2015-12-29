@@ -43,6 +43,15 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provision :shell,
-    inline: "sed -e \"s/::DOMAIN::/#{$DOMAIN}/g\" /opt/rancher/html/nginx.conf.tmpl > /opt/rancher/html/nginx.conf"
+    inline: "sed -e \"s/::DOMAIN::/#{$DOMAIN}/g\" /opt/rancher/html/default.conf.tmpl > /opt/rancher/html/default.conf"
+
+  config.vm.provision :docker do |d|
+    d.pull_images "gliderlabs/alpine:3.2"
+    d.build_image "/opt/rancher/html",
+      args: "-t jjperezaguinaga/html"
+    d.run "jjperezaguinaga/html",
+      args: "-p 443:443 -p 80:80 --volumes-from jjperezaguinaga-letsencrypt",
+      restart: "always"
+  end
 
 end
