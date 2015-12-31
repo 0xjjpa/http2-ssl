@@ -1,0 +1,3 @@
+#!/bin/bash
+
+DOMAIN="domain.com" EMAIL="certs@domain.com" AWS_ACCESS_KEY="XXXXX" AWS_SECRET_KEY="XXXXX" AWS_KEYPAIR_NAME="key-zone-name" AWS_KEYPAIR_PATH="/home/admin/.ssh/key-zone-name.pem" vagrant $1 $2 $3 $4
