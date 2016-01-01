@@ -1,12 +1,12 @@
 ENTRYPOINT=./vagrant.sh
 
 up:
-	$(ENTRYPOINT) up
-
-provision:
-	$(ENTRYPOINT) provision --provision-with replace,webpage
+	$(ENTRYPOINT) up --no-provision
 
 reprovision:
+	$(ENTRYPOINT) provision --provision-with replace,webpage
+
+provision:
 	$(ENTRYPOINT) provision --provision-with letsencrypt,replace,webpage
 
 ssh:
