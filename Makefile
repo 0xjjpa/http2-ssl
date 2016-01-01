@@ -17,3 +17,6 @@ halt:
 
 status:
 	$(ENTRYPOINT) status
+
+destroy:
+	$(ENTRYPOINT) destroy
