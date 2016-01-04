@@ -72,21 +72,19 @@ You can check that we have successfully created our machine by running the AWS c
 # Some code goes here.
 ```
 
-# Adding our machine public DNS as a CNAME record
+# Pointing our machine to a specific domain
 
 Before we can provision our machine, we need to make sure it has a proper mapped domain inside our DNS Server to allow LetsEncrypt.org reach the server when validating the SSL certificate.
 
-We can do that by SSHing into the machine, and using AWS instance metada to get its DNS url.
+We can do that by SSHing into the machine, and using AWS instance metada to get its DNS url and IP.
 
 ```
 # Some code goes here
 ```
 
-With our public DNS url 
+With our public DNS url, we just need to log into our public DNS server panel to add the entry as a CNAME record to the domain we want to use; we would need to add an A record if we wanted to use the root domain and add our machine IP instead . The domain needs to be the same one used inside the `vagrant.sh` script, as we will reach LetsEncrypt.org in the next step.
 
-
-
-# Adding DNS for server in
+# Provisioning the machine
 
 
 
