@@ -2,6 +2,8 @@
 
 [HTTP2](https://assets.jjperezaguinaga.com/articles/v1/http2-rancheros-nginx-letsencrypt/RancherOS_HTTP2.jpg)
 
+*tl;dr By copying the following [repo](https://github.com/jjperezaguinaga/http2-ssl), adding your own AWS credentials, and running `make up && make provision`, you create a t2.nano AWS vm that hosts a webpage with HTTP/2 using NGINX with a SSL Certificate by Let's Encrypt*
+
 In September of 2015, NGINX Inc. released [NGINX version 1.9.5][NGINX], which contains the open source patch that allows the popular web server to support [HTTP/2][HTTP2-Slides]. This new version of the HTTP protocol contains major upgrades over HTTP/1.1 that makes loading webpages significantly faster. It is key for Front End Engineers to learn the new features included in HTTP/2, since many techniques currently used in Web Development and HTTP/1.1 will become [anti-patterns in HTTP/2][Cloudflare-WebDev].
 
 To get started with HTTP/2, a SSL certificate is required, since there's no implementation of HTTP/2 without SSL. Luckily enough, [Lets Encrypt][LetsEncrypt] recently started its public beta, allowing issuing SSL certificates for free. Assembling the request of a SSL certificate, installing the proper version of NGINX, and running the NGINX server with HTTP/2 enabled, can be easily done inside Amazon Web Services (AWS) with [Docker][Docker] and [RancherOS][RancherOS].
@@ -45,6 +47,44 @@ $ curl ifconfig.io | xargs sh -c 'aws ec2 authorize-security-group-ingress --gro
 ```
 
 *As a good practice, never open port 22 to the external world (0.0.0.0/0) to avoid brute force attacks against your VM to try to get SSH access (or if you do install [Fail2Ban](http://www.fail2ban.org/wiki/index.php/Main_Page)). Ideally, port forward your SSH console to a less common port (i.e. 8722) and only allow access to it to your own IP, either the one from your internal network or the one used at that specific point in time, which is what we are doing with the `curl ifconfig.io` command.*
+
+With our port 22 open for Vagrant, and with the proper credentials set in motion, now you can start booting up the machine. This can be done with a simple `make` command that will  use the `vagrant.sh` script defined before. This will only create the RancherOS t2.nano machine, but won't provision it nor execute the Docker provisioner from Vagrant.
+
+```
+➜  http2-ssl git:(master) make up
+./vagrant.sh up --no-provision
+Bringing machine 'default' up with 'aws' provider...
+==> default: Warning! The AWS provider doesn't support any of the Vagrant
+==> default: high-level network configurations (`config.vm.network`). They
+==> default: will be silently ignored.
+==> default: Starting the instance...
+==> default: Waiting for instance to become "ready"...
+==> default: Waiting for SSH to become available...
+==> default: Machine is booted and ready for use!
+==> default: Rsyncing folder: /Users/jjperezaguinaga/Projects/http2-ssl/ => /opt/rancher
+==> default:   - Exclude: [".vagrant/", ".git/"]
+==> default: Machine not provisioned because `--no-provision` is specified.
+```
+
+You can check that we have successfully created our machine by running the AWS cli tool.
+
+```
+# Some code goes here.
+```
+
+# Adding our machine public DNS as a CNAME record
+
+Before we can provision our machine, we need to make sure it has a proper mapped domain inside our DNS Server to allow LetsEncrypt.org reach the server when validating the SSL certificate.
+
+We can do that by SSHing into the machine, and using AWS instance metada to get its DNS url.
+
+```
+# Some code goes here
+```
+
+With our public DNS url 
+
+
 
 # Adding DNS for server in
 
