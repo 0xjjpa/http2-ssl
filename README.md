@@ -1,8 +1,8 @@
 # Setting up a HTTP/2 Webpage with RancherOS, NGINX and Let's Encrypt in AWS.
 
-[HTTP2](https://assets.jjperezaguinaga.com/articles/v1/http2-rancheros-nginx-letsencrypt/RancherOS_HTTP2.jpg)
+![HTTP2](https://assets.jjperezaguinaga.com/articles/v1/http2-rancheros-nginx-letsencrypt/RancherOS_HTTP2.jpg)
 
-*tl;dr By copying the following [repo](https://github.com/jjperezaguinaga/http2-ssl), adding your own AWS credentials, and running `make up && make provision`, you create a t2.nano AWS vm that hosts a webpage with HTTP/2 using NGINX with a SSL Certificate by Let's Encrypt*
+*tl;dr By copying the following [repo](https://github.com/jjperezaguinaga/http2-ssl), adding your own AWS credentials, and running `make up && make provision`, you create a t2.nano AWS vm that hosts a webpage with HTTP/2 using NGINX with a SSL Certificate by Let's Encrypt. An asciinema play is embedded at the bottom of the post.*
 
 In September of 2015, NGINX Inc. released [NGINX version 1.9.5][NGINX], which contains the open source patch that allows the popular web server to support [HTTP/2][HTTP2-Slides]. This new version of the HTTP protocol contains major upgrades over HTTP/1.1 that makes loading webpages significantly faster. It is key for Front End Engineers to learn the new features included in HTTP/2, since many techniques currently used in Web Development and HTTP/1.1 will become [anti-patterns in HTTP/2][Cloudflare-WebDev].
 
@@ -84,17 +84,56 @@ We can do that by SSHing into the machine, and using AWS instance metada to get 
 
 With our public DNS url, we just need to log into our public DNS server panel to add the entry as a CNAME record to the domain we want to use; we would need to add an A record if we wanted to use the root domain and add our machine IP instead . The domain needs to be the same one used inside the `vagrant.sh` script, as we will reach LetsEncrypt.org in the next step.
 
+To make sure your domain is being resolved to the right IP/AWS DNS url, use the `dig` command (e.g. `$ dig test.domain.com`). Depending on the TTL of your DNS provider, it might take a few minutes to resolve correctly.
+
 # Provisioning the machine
 
+With the domain being resolved correctly, and our machine properly up and running, the rest is fairly simple. Run the provision command that will run three providers, two with docker and one with shell scripting.
+
+```
+make provision
+```
+If you see the `Makefile`, you will see that we are explicitely telling Vagrant to use all of them while provisioning. 
+
+```
+$ cat Makefile
+(...)
+provision:
+	$(ENTRYPOINT) provision --provision-with letsencrypt,replace,webpage
+```
+
+The reasoning behind this is that each provisioner fulfills a specific task, that we might later want to redo:
+
+* **letsencrypt** runs the initial LetsEncrypt docker container that will reach LetsEncrypt.org and map the container with the right name to then use its container as a volume container, since the SSL certificate will be stored there.
+* **replace** runs a shell script that replaces our NGINX configuration with the domain given in `vagrant.sh`
+* **webpage** runs the final NGINX container that leverages in the letsencrypt volume to setup our sample webpage.
+
+In case we want to change our webpage, we would need to run `make reprovision`, which will then upload the new contents of the webpage to our server. If we were to use `make provision` again, we would destroy the LetsEncrypt container that holds our certificates and ask LetsEncrypt to issue them again, which can prompt issues (see IMPORTANT NOTE)
+
+**IMPORTANT NOTE: LetsEncrypt has a cap for IP and domains. This setup only works for one specific domain, but it can be easily modified to work with many domains if you just add `-d DOMAIN` in the Vagrantfile for each additional domain. If you want to test it, I suggest you to add the staging server to the letsencrypt parameter to avoid being capped while testing.**
+
+# Updating our webpage
+
+Currently, the project has a mock webpage that can be easily replacable. The NGINX configuration is only for serving static pages, so if you wish to modify the webpage, just change the content of the `dist` folder inside the `html` folder.
+
+```
+➜  http2-ssl git:(master) ✗ tree html
+html
+├── Dockerfile
+├── default.conf.tmpl
+├── dist
+│   └── index.html
+└── nginx.conf
+```
+
+After doing so, just do `make reprovision`.
 
 
 # Conclusion
 
 Although setting up a HTTP/2 Web Server seems to be a task meant for a System Administrator, learning how to set it up as a Front End Engineer allows easy testing of the protocol, benchmarking of the improvements with the new techniques, and pushing its implementation across the web products Front End Engineers are resnposible of.
 
-FOOT NOTES
-
-*Although NGINX wasn't the [first server to support HTTP2][HTTP2-Implementations], it's one of the most popular in the Web field.*
+Setting up NGINX is still somewhat cumbersome, but it has the benefits of a reliable and battle tested web server. If you are interested in a more user-friendly experience, I would recommend   the reader to review Caddy server, which already has HTTP/2 included.
 
 
 [NGINX]: https://www.nginx.com/blog/nginx-1-9-5/
