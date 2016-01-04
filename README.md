@@ -79,7 +79,7 @@ $ aws ec2 describe-instances
 
 Before we can provision our machine, we need to make sure it has a proper mapped domain inside our DNS Server to allow LetsEncrypt.org to reach the server when validating the SSL certificate. This guarantees LetsEncrypt.org and our users that we are the owners of that specific domain.
 
-We can do that by SSHing into the machine, and using AWS instance metada to get its public hostname.
+We can do that by SSHing into the machine, and using AWS instance metadata to get its public hostname.
 
 ```
 ➜  http2-ssl git:(master) ✗ make ssh
@@ -112,30 +112,36 @@ ec2-54-172-126-31.us-west-1.compute.amazonaws.com. 21599 IN A 54.172.126.31
 With the domain being resolved correctly, and our machine properly up and running, the rest is fairly simple. Run the provision command that will run three providers, two with docker and one with shell scripting.
 
 ```
-make provision
-```
-If you see the `Makefile`, you will see that we are explicitely telling Vagrant to use all of them while provisioning. 
-
-```
-$ cat Makefile
-(...)
-provision:
-	$(ENTRYPOINT) provision --provision-with letsencrypt,replace,webpage
+➜  http2-ssl git:(master) make provision
+./vagrant.sh provision --provision-with letsencrypt,replace,webpage
+(...) # very large log will start
 ```
 
-The reasoning behind this is that each provisioner fulfills a specific task, that we might later want to redo:
+If you see the output of our `make provision` script, you will see that we are explicitly telling Vagrant to use all of them while provisioning. The reasoning behind this is that each provisioner fulfils a specific task, that we might later want to redo:
 
 * **letsencrypt** runs the initial LetsEncrypt docker container that will reach LetsEncrypt.org and map the container with the right name to then use its container as a volume container, since the SSL certificate will be stored there.
 * **replace** runs a shell script that replaces our NGINX configuration with the domain given in `vagrant.sh`
 * **webpage** runs the final NGINX container that leverages in the letsencrypt volume to setup our sample webpage.
 
-In case we want to change our webpage, we would need to run `make reprovision`, which will then upload the new contents of the webpage to our server. If we were to use `make provision` again, we would destroy the LetsEncrypt container that holds our certificates and ask LetsEncrypt to issue them again, which can prompt issues (see IMPORTANT NOTE)
+In case we want to change our webpage, we would need to run `make reprovision`, which will then upload the new contents of the webpage to our server. If we were to use `make provision` again, we would destroy the LetsEncrypt container that holds our certificates and ask LetsEncrypt to issue them again, which can involve some known issues issues (see IMPORTANT NOTE)
 
-**IMPORTANT NOTE: LetsEncrypt has a cap for IP and domains. This setup only works for one specific domain, but it can be easily modified to work with many domains if you just add `-d DOMAIN` in the Vagrantfile for each additional domain. If you want to test it, I suggest you to add the staging server to the letsencrypt parameter to avoid being capped while testing.**
+**IMPORTANT NOTE: LetsEncrypt has a [rate limit for IP and domains certs issuing](https://community.letsencrypt.org/t/public-beta-rate-limits/4772). If you want to test this setup, I suggest you to add the staging server to the letsencrypt cmd inside the Vagrantfile to avoid being capped while testing. Additionally, this current setup only works for one specific domain, but it can be easily modified to work with many domains if you just add `-d DOMAIN` in the Vagrantfile for each additional domain**
+
+```
+# Inside Vagrantfile
+(...)
+  config.vm.provision "letsencrypt", type: "docker" do |d|
+    (...)
+      args: "-p 443:443",
+      restart: "no",
+      cmd: "--email #{$EMAIL} --agree-tos -d #{$DOMAIN} --server https://acme-staging.api.letsencrypt.org/directory certonly"
+  end
+```
+
 
 # Updating our webpage
 
-Currently, the project has a mock webpage that can be easily replacable. The NGINX configuration is only for serving static pages, so if you wish to modify the webpage, just change the content of the `dist` folder inside the `html` folder.
+Currently, the project has a mock webpage that can be easily replaceable. The NGINX configuration is only for serving static pages, so if you wish to modify the webpage, just change the content of the `dist` folder inside the `html` folder.
 
 ```
 ➜  http2-ssl git:(master) ✗ tree html
@@ -152,9 +158,9 @@ After doing so, just do `make reprovision`.
 
 # Conclusion
 
-Although setting up a HTTP/2 Web Server seems to be a task meant for a System Administrator, learning how to set it up as a Front End Engineer allows easy testing of the protocol, benchmarking of the improvements with the new techniques, and pushing its implementation across the web products Front End Engineers are resnposible of.
+Although setting up a HTTP/2 Web Server seems to be a task meant for a System Administrator, learning how to set it up as a Front End Engineer allows easy testing of the protocol, benchmarking of the improvements with the new techniques, and pushing its implementation across the web products Front End Engineers are responsible of.
 
-Setting up NGINX is still somewhat cumbersome, but it has the benefits of a reliable and battle tested web server. If you are interested in a more user-friendly experience, I would recommend   the reader to review Caddy server, which already has HTTP/2 included.
+Setting up NGINX is still somewhat cumbersome, but it has the benefits of a reliable and battle tested web server in production. If you are interested in a more user-friendly experience more suitable for development to get started, I would recommend the reader to check [Caddy server](https://github.com/mholt/caddy), which already has HTTP/2 included. That being said, if your production environment is using NGINX, then its worth having your development setup in NGINX as well to ensure [dev-prod parity](http://12factor.net/dev-prod-parity).
 
 
 [NGINX]: https://www.nginx.com/blog/nginx-1-9-5/
