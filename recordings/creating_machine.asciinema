@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "width": 73,
+  "height": 23,
+  "duration": 182.262131,
+  "command": "/bin/zsh",
+  "title": "",
+  "env": {
+    "TERM": "xterm-256color",
+    "SHELL": "/bin/zsh"
+  },
+  "stdout": [
+    [
+      0.546318,
+      "\u001b[1m\u001b[7m%\u001b[27m\u001b[1m\u001b[0m                                                                        \r \r"
+    ],
+    [
+      0.000164,
+      "\u001b]2;jjperezaguinaga@Joses-MacBook-Air: ~/Projects/http2-ssl\u0007"
+    ],
+    [
+      0.000042,
+      "\u001b]1;..cts/http2-ssl\u0007"
+    ],
+    [
+      0.024480,
+      "\r\u001b[0m\u001b[27m\u001b[24m\u001b[J\u001b[01;32m➜ \u001b[01;32m \u001b[36mhttp2-ssl \u001b[01;34mgit:(\u001b[31mmaster\u001b[34m) \u001b[33m✗\u001b[00m\u001b[00m\u001b[01;34m \u001b[00m"
+    ],
+    [
+      0.000010,
+      "\u001b[K"
+    ],
+    [
+      0.000146,
+      "\u001b[?1h\u001b="
+    ],
+    [
+      0.898400,
+      "m"
+    ],
+    [
+      0.094717,
+      "\u0008ma"
+    ],
+    [
+      0.071922,
+      "k"
+    ],
+    [
+      0.128015,
+      "e"
+    ],
+    [
+      0.087660,
+      " "
+    ],
+    [
+      0.176235,
+      "u"
+    ],
+    [
+      0.208035,
+      "p"
+    ],
+    [
+      0.295831,
+      "\u001b[?1l\u001b\u003e"
+    ],
+    [
+      0.000094,
+      "\r\r\n"
+    ],
+    [
+      0.001451,
+      "\u001b]2;make up\u0007\u001b]1;make\u0007"
+    ],
+    [
+      0.009052,
+      "./vagrant.sh up --no-provision\r\n"
+    ],
+    [
+      3.768957,
+      "\u001b[0mBringing machine 'default' up with 'aws' provider...\u001b[0m\r\n"
+    ],
+    [
+      0.218519,
+      "\u001b[1;33m==\u003e default: Warning! The AWS provider doesn't support any of the Vagrant\r\n==\u003e default: high-level network configurations (`config.vm.network`). They\r\n==\u003e default: will be silently ignored.\u001b[0m\r\n"
+    ],
+    [
+      0.000431,
+      "\u001b[1m==\u003e default: Launching an instance with the following settings...\u001b[0m\r\n"
+    ],
+    [
+      0.000263,
+      "\u001b[1m==\u003e default:  -- Type: t2.nano\u001b[0m\r\n"
+    ],
+    [
+      0.000255,
+      "\u001b[1m==\u003e default:  -- AMI: ami-6d2d470d\u001b[0m\r\n"
+    ],
+    [
+      0.000246,
+      "\u001b[1m==\u003e default:  -- Region: us-west-1\u001b[0m\r\n"
+    ],
+    [
+      0.000232,
+      "\u001b[1m==\u003e default:  -- Keypair: jose-us-west-1\u001b[0m\r\n"
+    ],
+    [
+      0.000265,
+      "\u001b[1m==\u003e default:  -- Block Device Mapping: []\u001b[0m\r\n"
+    ],
+    [
+      0.000246,
+      "\u001b[1m==\u003e default:  -- Terminate On Shutdown: false\u001b[0m\r\n"
+    ],
+    [
+      0.000334,
+      "\u001b[1m==\u003e default:  -- Monitoring: false\u001b[0m\r\n"
+    ],
+    [
+      0.000294,
+      "\u001b[1m==\u003e default:  -- EBS optimized: false\u001b[0m\r\n"
+    ],
+    [
+      0.000255,
+      "\u001b[1m==\u003e default:  -- Assigning a public IP address in a VPC: false\u001b[0m\r\n"
+    ],
+    [
+      4.261395,
+      "\u001b[1m==\u003e default: Waiting for instance to become \"ready\"...\u001b[0m\r\n"
+    ],
+    [
+      19.852947,
+      "\u001b[1m==\u003e default: Waiting for SSH to become available...\u001b[0m\r\n"
+    ],
+    [
+      110.823969,
+      "\u001b[1m==\u003e default: Machine is booted and ready for use!\u001b[0m\r\n"
+    ],
+    [
+      16.057674,
+      "\u001b[1m==\u003e default: Rsyncing folder: /Users/jjperezaguinaga/Projects/http2-ssl/ =\u003e /opt/rancher\u001b[0m\r\n"
+    ],
+    [
+      0.000395,
+      "\u001b[1m==\u003e default:   - Exclude: [\".vagrant/\", \".git/\"]\u001b[0m\r\n"
+    ],
+    [
+      21.477323,
+      "\u001b[1m==\u003e default: Machine not provisioned because `--no-provision` is specified.\u001b[0m\r\n"
+    ],
+    [
+      0.058396,
+      "\u001b[1m\u001b[7m%\u001b[27m\u001b[1m\u001b[0m                                                                        \r \r"
+    ],
+    [
+      0.000143,
+      "\u001b]2;jjperezaguinaga@Joses-MacBook-Air: ~/Projects/http2-ssl\u0007"
+    ],
+    [
+      0.000029,
+      "\u001b]1;..cts/http2-ssl\u0007"
+    ],
+    [
+      0.021930,
+      "\r\u001b[0m\u001b[27m\u001b[24m\u001b[J\u001b[01;32m➜ \u001b[01;32m \u001b[36mhttp2-ssl \u001b[01;34mgit:(\u001b[31mmaster\u001b[34m) \u001b[33m✗\u001b[00m\u001b[00m\u001b[01;34m \u001b[00m"
+    ],
+    [
+      0.000011,
+      "\u001b[K"
+    ],
+    [
+      0.000033,
+      "\u001b[?1h\u001b="
+    ],
+    [
+      2.550902,
+      "e"
+    ],
+    [
+      0.223521,
+      "\u0008ex"
+    ],
+    [
+      0.127949,
+      "i"
+    ],
+    [
+      0.143950,
+      "t"
+    ],
+    [
+      0.104020,
+      "\u001b[?1l\u001b\u003e"
+    ],
+    [
+      0.000096,
+      "\r\r\n"
+    ],
+    [
+      0.003769,
+      "\u001b]2;exit\u0007\u001b]1;exit\u0007"
+    ]
+  ]
+}
